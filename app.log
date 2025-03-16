@@ -1,0 +1,6 @@
+2025-03-16 20:35:43,582 - invoice-tracker - INFO - Starting up
+2025-03-16 20:35:43,582 - invoice-tracker - INFO - Initializing Mongo DB client
+2025-03-16 20:40:29,430 - invoice-tracker - INFO - Starting up
+2025-03-16 20:40:29,431 - invoice-tracker - INFO - Initializing Mongo DB client
+2025-03-16 20:53:09,762 - invoice-tracker - INFO - Starting up
+2025-03-16 20:53:09,762 - invoice-tracker - INFO - Initializing Mongo DB client
