@@ -1,10 +1,11 @@
 from beanie import Document
 from bson import ObjectId
-from typing import Any, Dict, List, Optional, Type
+from typing import Any, Dict, List, Optional, Type, TypeVar, Generic, Union
 from datetime import datetime
 
 from app.db.object_id import PyObjectId
 
+T = TypeVar("T", bound=Document)
 
 def to_object_id(_id: str) -> PyObjectId:
     try:
@@ -25,35 +26,33 @@ class ComparingMethods:
     in_="$in"
     not_in="$nin"
 
-class MongoCrud:
+class MongoCrud(Generic[T]):
 
     model: Type[Document]
-
 
     def __init__(self):
         if not hasattr(self, "model") or not issubclass(self.model, Document):
             raise ValueError("A Beanie Document model must be set in the child class.")
 
-    async def create(self, data: Dict[str, Any]) -> Document:
+    async def create(self, data: Dict[str, Any]) -> T:
         data["created_at"] = datetime.now()
         data["updated_at"] = datetime.now()
 
         document = self.model(**data)
         return await document.insert()
 
-    async def read_all(self, skip: int = 0, limit: int = 10) -> List[Document]:
+    async def read_all(self, skip: int = 0, limit: int = 10) -> List[T]:
         return await self.model.find().skip(skip).limit(limit).to_list()
 
-    async def read_one(self, _id: str) -> Optional[Document]:
+    async def read_one(self, _id: str) -> Optional[T]:
         return await self.model.get(_id)
 
     async def read_by_fields(
             self, filters: Dict[str, Any], skip: int = 0, limit: int = 10
-    ) -> List[Document]:
-
+    ) -> List[T]:
         return await self.model.find(filters).skip(skip).limit(limit).to_list()
 
-    async def update(self, _id: str, data: Dict[str, Any]) -> Optional[Document]:
+    async def update(self, _id: str, data: Dict[str, Any]) -> Optional[T]:
         document = await self.model.get(_id)
         if not document:
             return None
@@ -61,7 +60,7 @@ class MongoCrud:
         for key, value in data.items():
             setattr(document, key, value)
 
-        document.updated_at = datetime.utcnow()
+        document.updated_at = datetime.now()
         await document.save()
         return document
 
@@ -72,58 +71,33 @@ class MongoCrud:
             return True
         return False
 
+    async def paginate(self, filters: Dict[str, Any], skip: int = 0, limit: int = 10, cursor: Optional[Union[str, datetime]] = None) -> Dict[str, Any]:
+        """Reusable pagination for all read methods
 
-# class MongoCrud:
-#     def __init__(self, collection_name: str):
-#         self.collection_name = collection_name
-#
-#     async def create(self, db: AsyncIOMotorDatabase, data: Dict[str, Any]) -> Dict[str, Any]:
-#
-#         data["created_at"] = datetime.now()
-#         data["updated_at"] = datetime.now()
-#
-#         result = await db[self.collection_name].insert_one(data)
-#
-#         return await self.read_one(db, result.inserted_id)
-#
-#     async def read_all(self, db: AsyncIOMotorDatabase, skip: int = 0, limit: int = 10) -> List[Dict[str, Any]]:
-#         cursor = db[self.collection_name].find({}).skip(skip).limit(limit)
-#         documents = []
-#         async for doc in cursor:
-#             doc["_id"] = str(doc["_id"])
-#             documents.append(doc)
-#
-#         return documents
-#
-#     async def read_one(self, db: AsyncIOMotorDatabase, _id: str) -> Optional[Dict[str, Any]]:
-#         document = await db[self.collection_name].find_one({"_id": to_object_id(_id)})
-#         if document:
-#             document["id"] = str(document["_id"])
-#         return document
-#
-#     async def read_by_fields(
-#             self, db: AsyncIOMotorDatabase, filters: Dict[str, Any], skip: int = 0, limit: int = 10
-#     ) -> List[Dict[str, Any]]:
-#         """Fetch documents matching specific field values"""
-#
-#         cursor = db[self.collection_name].find(filters).skip(skip).limit(limit)
-#         documents = []
-#         async for doc in cursor:
-#             doc["_id"] = str(doc["_id"])  # Convert ObjectId to string
-#             documents.append(doc)
-#
-#         return documents
-#
-#     async def update(self, db: AsyncIOMotorDatabase, _id: str, data: Dict[str, Any]) -> Optional[Dict[str, Any]]:
-#         data["updated_at"] = datetime.now()
-#         await db[self.collection_name].update_one(
-#             {"_id": to_object_id(_id)},
-#             {
-#                 "$set": data,
-#             },
-#         )
-#         return await self.read_one(db, _id)
-#
-#     async def delete(self, db: AsyncIOMotorDatabase, _id: str) -> bool:
-#         result = await db[self.collection_name].delete_one({"_id": to_object_id(_id)})
-#         return result.deleted_count > 0
+        Supports both:
+        - Offset-based pagination (`skip` + `limit`)
+        - Cursor-based pagination (`_id` or `created_at`)
+        """
+
+        query = filters.copy()
+
+        if cursor:
+            if isinstance(cursor, str):  # If using `_id` for pagination
+                query["_id"] = {"$gt": cursor}
+            elif isinstance(cursor, datetime):  # If using `created_at` for pagination
+                query["created_at"] = {"$gt": cursor}
+
+        documents = await self.model.find(query).sort("created_at").skip(skip).limit(limit).to_list()
+
+        next_cursor = None
+        if documents:
+            next_cursor = documents[-1].created_at  # Use `created_at` as the cursor
+
+        total_count = await self.model.find(filters).count()
+
+        return {
+            "items": documents,
+            "next_cursor": next_cursor,
+            "total_count": total_count,
+        }
+

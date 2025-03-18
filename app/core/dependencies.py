@@ -3,11 +3,14 @@ from functools import lru_cache
 
 from app.core.config import Settings
 from app.db.database import MongoDBClient
+from app.schema.user import UserDocument
+from app.schema.client import ClientDocument
 
 
 @lru_cache()
 def get_settings():
     return Settings()
+
 
 @lru_cache()
 def get_mongo_client():
@@ -15,7 +18,7 @@ def get_mongo_client():
     return MongoDBClient(
         mongo_uri=settings.MONGO_URI,
         database_name=settings.MONGO_DATABASE_NAME,
-        document_models=[]
+        document_models=[UserDocument, ClientDocument]
     )
 
 def get_logger():

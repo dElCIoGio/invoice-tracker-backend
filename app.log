@@ -4,3 +4,32 @@
 2025-03-16 20:40:29,431 - invoice-tracker - INFO - Initializing Mongo DB client
 2025-03-16 20:53:09,762 - invoice-tracker - INFO - Starting up
 2025-03-16 20:53:09,762 - invoice-tracker - INFO - Initializing Mongo DB client
+2025-03-17 11:51:44,842 - invoice-tracker - INFO - Starting up
+2025-03-17 11:51:44,844 - invoice-tracker - INFO - Initializing Mongo DB client
+2025-03-17 12:11:46,939 - invoice-tracker - INFO - Starting up
+2025-03-17 12:11:46,940 - invoice-tracker - INFO - Initializing Mongo DB client
+2025-03-17 12:39:04,049 - invoice-tracker - INFO - Starting up
+2025-03-17 12:39:04,049 - invoice-tracker - INFO - Initializing Mongo DB client
+2025-03-17 15:06:04,798 - invoice-tracker - INFO - App started in development mode
+2025-03-17 15:06:04,799 - invoice-tracker - INFO - Initializing Mongo DB client
+2025-03-17 21:50:08,083 - invoice-tracker - INFO - App started in development mode
+2025-03-17 21:50:08,083 - invoice-tracker - INFO - Initializing Mongo DB client
+2025-03-17 21:50:39,827 - invoice-tracker - INFO - App started in development mode
+2025-03-17 21:50:39,827 - invoice-tracker - INFO - Initializing Mongo DB client
+2025-03-17 21:52:42,427 - invoice-tracker - INFO - App started in development mode
+2025-03-17 21:52:42,428 - invoice-tracker - INFO - Initializing Mongo DB client
+2025-03-17 21:52:42,884 - invoice-tracker - ERROR - bad auth : Authentication failed., full error: {'ok': 0, 'errmsg': 'bad auth : Authentication failed.', 'code': 8000, 'codeName': 'AtlasError'}
+2025-03-17 21:57:32,197 - invoice-tracker - INFO - App started in development mode
+2025-03-17 21:57:32,198 - invoice-tracker - INFO - Initializing Mongo DB client
+2025-03-17 22:01:39,681 - invoice-tracker - INFO - App started in development mode
+2025-03-17 22:01:39,682 - invoice-tracker - INFO - Initializing Mongo DB client
+2025-03-17 22:21:11,433 - invoice-tracker - INFO - App started in development mode
+2025-03-17 22:21:11,434 - invoice-tracker - INFO - Initializing Mongo DB client
+2025-03-17 22:23:39,636 - invoice-tracker - INFO - App started in development mode
+2025-03-17 22:23:39,637 - invoice-tracker - INFO - Initializing Mongo DB client
+2025-03-17 22:24:17,537 - invoice-tracker - INFO - App started in development mode
+2025-03-17 22:24:17,537 - invoice-tracker - INFO - Initializing Mongo DB client
+2025-03-17 22:43:10,663 - invoice-tracker - INFO - App started in development mode
+2025-03-17 22:43:10,664 - invoice-tracker - INFO - Initializing Mongo DB client
+2025-03-17 22:44:05,108 - invoice-tracker - INFO - App started in development mode
+2025-03-17 22:44:05,109 - invoice-tracker - INFO - Initializing Mongo DB client
