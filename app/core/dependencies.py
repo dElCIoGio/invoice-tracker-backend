@@ -21,9 +21,9 @@ def get_mongo_client():
         document_models=[UserDocument, ClientDocument]
     )
 
+
 def get_logger():
-    """Returns a singleton logger instance."""
-    logger = logging.getLogger("invoice-tracker")  # Unique logger name
+    logger = logging.getLogger("invoice-tracker")
 
     if not logger.handlers:  # Prevent duplicate handlers
         logger.setLevel(logging.INFO)
@@ -32,7 +32,7 @@ def get_logger():
         formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
 
         # File handler
-        file_handler = logging.FileHandler("app.log")
+        file_handler = logging.FileHandler("logs/app.log")
         file_handler.setFormatter(formatter)
 
         # Console handler

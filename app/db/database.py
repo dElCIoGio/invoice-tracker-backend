@@ -1,10 +1,13 @@
+from typing import List
+from xml.dom.minidom import Document
+
 from motor.motor_asyncio import AsyncIOMotorDatabase, AsyncIOMotorClient
 from beanie import init_beanie
 from pymongo.errors import PyMongoError
 
 
 class MongoDBClient:
-    def __init__(self, mongo_uri: str, database_name: str, document_models = None):
+    def __init__(self, mongo_uri: str, database_name: str, document_models: List[Document] = None):
         self.mongo_uri = mongo_uri
         self.document_models = document_models if document_models is not None else []
         self.database_name = database_name

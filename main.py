@@ -1,4 +1,3 @@
-import json
 from contextlib import asynccontextmanager
 from collections.abc import AsyncIterator
 from datetime import datetime
@@ -8,13 +7,11 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 
 from starlette.exceptions import HTTPException
-from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.requests import Request
 from starlette.responses import JSONResponse
-from starlette.status import HTTP_500_INTERNAL_SERVER_ERROR
 
 from app.core.dependencies import get_settings, get_mongo_client, get_logger
-from app.api.v1.router import router as v1_router
+from app.api.base_router import router as base_router
 from app.middleware.ResponseMiddleware import ResponseFormatterMiddleware
 
 settings = get_settings()
@@ -57,7 +54,8 @@ app.add_middleware(
 
 app.add_middleware(ResponseFormatterMiddleware)
 
-app.include_router(v1_router, prefix=settings.API_V1_ROUTE)
+app.include_router(base_router, prefix=settings.API_BASE_ROUTE)
+
 
 @app.get("/health", tags=["Health"])
 async def health_check():

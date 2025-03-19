@@ -41,8 +41,8 @@ class MongoCrud(Generic[T]):
         document = self.model(**data)
         return await document.insert()
 
-    async def read_all(self, skip: int = 0, limit: int = 10) -> List[T]:
-        return await self.model.find().skip(skip).limit(limit).to_list()
+    async def read_all(self, skip: int = 0, limit: int = 10, cursor: Optional[Union[str, datetime]] = None) -> Dict[str, Any]:
+        return await self.paginate({}, skip, limit, cursor)
 
     async def read_one(self, _id: str) -> Optional[T]:
         return await self.model.get(_id)
@@ -72,13 +72,6 @@ class MongoCrud(Generic[T]):
         return False
 
     async def paginate(self, filters: Dict[str, Any], skip: int = 0, limit: int = 10, cursor: Optional[Union[str, datetime]] = None) -> Dict[str, Any]:
-        """Reusable pagination for all read methods
-
-        Supports both:
-        - Offset-based pagination (`skip` + `limit`)
-        - Cursor-based pagination (`_id` or `created_at`)
-        """
-
         query = filters.copy()
 
         if cursor:

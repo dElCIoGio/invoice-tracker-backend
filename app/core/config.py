@@ -7,13 +7,11 @@ from pydantic_settings import BaseSettings
 class Settings(BaseSettings):
     # App settings
     PROJECT_NAME: str = "UniCollector"
-    PROJECT_DESCRIPTION: str ="A production-ready FastAPI backend with authentication, database integration, and more"
+    PROJECT_DESCRIPTION: str = "A production-ready FastAPI backend with authentication, database integration, and more"
     PROJECT_VERSION: str ="1.0.0"
 
-
     # API settings
-    API_V1_ROUTE: str = "/api/v1"
-
+    API_BASE_ROUTE: str = "/api"
 
     # CORS settings
     BACKEND_CORS_ORIGINS: list = ["*"]  # In production, replace with specific origins

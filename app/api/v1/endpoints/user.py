@@ -27,6 +27,7 @@ async def create_user(new_user_data: user_schema.UserCreate):
 
 @router.put("/{user_id}", response_model=user_schema.User)
 async def update_user(user_id: str, update_data: user_schema.UserUpdate):
+    print(update_data)
     user = await user_model.update_user(user_id, update_data)
     if not user:
         raise HTTPException(
